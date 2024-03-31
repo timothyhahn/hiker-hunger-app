@@ -6,6 +6,11 @@
 	import NavBar from '$lib/components/NavBar.svelte';
 	import { writable, type Writable } from 'svelte/store';
 	import { type Resupply as ResupplyType } from '$lib/resupply';
+	import { onMount } from 'svelte';
+
+	const VERSION_KEY = 'v1'
+	const DISPLAY_SETTINGS_KEY = `displaySettings-${VERSION_KEY}`;
+	const CURRENT_RESUPPLY_KEY = `currentResupply-${VERSION_KEY}`;
 
 	let displaySettings: Writable<DisplaySettings> = writable(structuredClone(DEFAULT_DISPLAY_SETTINGS));
 
@@ -20,6 +25,28 @@
 	};
 
 	let resupply: Writable<ResupplyType> = writable(structuredClone(DEFAULT_RESUPPLY));
+	onMount(() => {
+		if (localStorage.getItem(DISPLAY_SETTINGS_KEY)) {
+			try {
+				displaySettings.set(JSON.parse(localStorage.getItem(DISPLAY_SETTINGS_KEY)));
+			} catch (err) {
+				console.error('Failed to parse display settings from local storage', err);
+			}
+		}
+		if (localStorage.getItem(CURRENT_RESUPPLY_KEY)) {
+			try {
+				resupply.set(JSON.parse(localStorage.getItem(CURRENT_RESUPPLY_KEY)));
+			} catch (err) {
+				console.error('Failed to parse current resupply from local storage', err);
+			}
+		}
+		displaySettings.subscribe((value) => {
+			localStorage.setItem(DISPLAY_SETTINGS_KEY, JSON.stringify(value));
+		});
+		resupply.subscribe((value) => {
+			localStorage.setItem(CURRENT_RESUPPLY_KEY, JSON.stringify(value));
+		});
+	})
 </script>
 
 <main class="h-[100vh] w-full">

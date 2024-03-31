@@ -8,9 +8,7 @@
 	import { type Writable } from 'svelte/store';
 	import { PrimaryStat, type Resupply } from '$lib/resupply';
 	import { type DisplaySettings, Trackable } from '$lib/settings';
-	import { ScrollArea } from '$lib/components/ui/scroll-area';
 	import { Separator } from '$lib/components/ui/separator';
-	import { onMount } from 'svelte';
 
 	export let resupply: Writable<Resupply>;
 	export let displaySettings: DisplaySettings;
@@ -76,13 +74,13 @@
 <Card.Root class="fixed bottom-0 w-full rounded-b-none p-1">
 	<Collapsible.Root bind:open={expanded}>
 		<Card.Header class="p-1">
-			<Card.Title>
-				<Collapsible.Trigger class="w-full text-left">
+			<Card.Title class="flex justify-between flex-row">
+				<Collapsible.Trigger class="w-full text-left flex-1 flex-row">
 					<div class="flex justify-between">
-						<div class="flex-1 my-auto">
+						<div class="my-auto">
 							{getPrimaryStatValue($resupply, primaryStat)}
 						</div>
-						<div class="flex flex-row">
+						<div>
 							<Button variant="ghost" class="mr-4">
 								{#if expanded}
 									<ChevronDown />
@@ -90,29 +88,29 @@
 									<ChevronUp />
 								{/if}
 							</Button>
-
-							<AlertDialog.Root>
-								<AlertDialog.Trigger>
-									<Button variant="secondary">Clear</Button>
-								</AlertDialog.Trigger>
-								<AlertDialog.Content>
-									<AlertDialog.Header>
-										<AlertDialog.Title>
-											Are you sure?
-											<div>
-												This will completely reset the resupply.
-											</div>
-										</AlertDialog.Title>
-									</AlertDialog.Header>
-									<AlertDialog.Footer>
-										<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-										<AlertDialog.Action on:click={clearAll}>Continue</AlertDialog.Action>
-									</AlertDialog.Footer>
-								</AlertDialog.Content>
-							</AlertDialog.Root>
 						</div>
 					</div>
 				</Collapsible.Trigger>
+				<AlertDialog.Root>
+					<AlertDialog.Trigger>
+						<Button variant="secondary">Clear</Button>
+					</AlertDialog.Trigger>
+					<AlertDialog.Content>
+						<AlertDialog.Header>
+							<AlertDialog.Title>
+								Are you sure?
+								<div>
+									This will completely reset the resupply.
+								</div>
+							</AlertDialog.Title>
+						</AlertDialog.Header>
+						<AlertDialog.Footer>
+							<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+							<AlertDialog.Action on:click={clearAll}>Continue</AlertDialog.Action>
+						</AlertDialog.Footer>
+					</AlertDialog.Content>
+				</AlertDialog.Root>
+
 			</Card.Title>
 		</Card.Header>
 		<Collapsible.Content class="p-3">
