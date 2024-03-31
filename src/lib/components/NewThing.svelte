@@ -67,19 +67,21 @@
 			toast.error('Quantity must be a positive number.');
 			return;
 		}
-		if ($thing.energy && (isNaN(parseFloat($thing.energy)) || $thing.energy < 0)) {
+
+		console.log($thing.energy);
+		if ($thing.energy && (isNaN(parseFloat($thing.energy)) || $thing.energy < 0) || $thing.energy === '') {
 			toast.error('Energy must be a positive number.');
 			return;
 		}
-		if ($thing.protein && (isNaN(parseFloat($thing.protein)) || $thing.protein < 0)) {
+		if ($thing.protein && (isNaN(parseFloat($thing.protein)) || $thing.protein < 0) || $thing.protein === '') {
 			toast.error('Protein must be a positive number.');
 			return;
 		}
-		if ($thing.carbohydrates && (isNaN(parseFloat($thing.carbohydrates)) || $thing.carbohydrates < 0)) {
+		if ($thing.carbohydrates && (isNaN(parseFloat($thing.carbohydrates)) || $thing.carbohydrates < 0) || $thing.carbohydrates === '') {
 			toast.error('Carbohydrates must be a positive number.');
 			return;
 		}
-		if ($thing.fat && (isNaN(parseFloat($thing.fat)) || $thing.fat < 0)) {
+		if ($thing.fat && (isNaN(parseFloat($thing.fat)) || $thing.fat < 0) || $thing.fat === '') {
 			toast.error('Fat must be a positive number.');
 			return;
 		}
@@ -122,7 +124,7 @@
 	}
 </script>
 
-<Card.Root class="w-[320px] mx-auto">
+<Card.Root class="w-[320px] md:w-[480px] lg:w-[640px] mx-auto">
 	<Card.Header>
 		<Card.Title>Add Something To Your Resupply</Card.Title>
 		<Card.Description>Choose what you want to track about each thing in the menu.</Card.Description>
@@ -135,13 +137,13 @@
 			</div>
 			<div class="flex flex-col space-y-1.5">
 				<Label for="quantity">Quantity</Label>
-				<Input id="quantity" bind:value={$thing.quantity} />
+				<Input id="quantity" bind:value={$thing.quantity} type="number" />
 			</div>
 			{#if $resupply[Trackable.energy]}
 				<div class="flex flex-col space-y-1.5">
 					<Label for="energy">{displaySettings.energyUnit}</Label>
 					<div class="flex">
-						<Input id="energy" bind:value={$thing.energy} class="flex-1" on:keypress={handleKeyPress} />
+						<Input id="energy" bind:value={$thing.energy} class="flex-1" on:keypress={handleKeyPress} type="number" />
 						<Dialog.Root bind:open={energyOpen}>
 							<Dialog.Trigger class="mx-2">
 								<CalculatorIcon />
@@ -158,7 +160,7 @@
 				<div class="flex flex-col space-y-1.5">
 					<Label for="protein">Protein</Label>
 					<div class="flex">
-						<Input id="protein" bind:value={$thing.protein} class="flex-1" on:keypress={handleKeyPress} />
+						<Input id="protein" bind:value={$thing.protein} class="flex-1" on:keypress={handleKeyPress} type="number" />
 						<Dialog.Root bind:open={proteinOpen}>
 							<Dialog.Trigger class="mx-2">
 								<CalculatorIcon />
@@ -175,7 +177,7 @@
 				<div class="flex flex-col space-y-1.5">
 					<Label for="carbohydrates">Carbohydrates</Label>
 					<div class="flex">
-						<Input id="carbohydrates" bind:value={$thing.carbohydrates} class="flex-1" on:keypress={handleKeyPress} />
+						<Input id="carbohydrates" bind:value={$thing.carbohydrates} class="flex-1" on:keypress={handleKeyPress} type="number" />
 						<Dialog.Root bind:open={carbohydratesOpen}>
 							<Dialog.Trigger class="mx-2">
 								<CalculatorIcon />
@@ -192,7 +194,7 @@
 				<div class="flex flex-col space-y-1.5">
 					<Label for="fat">Fat</Label>
 					<div class="flex">
-						<Input id="fat" bind:value={$thing.fat} class="flex-1" on:keypress={handleKeyPress} />
+						<Input id="fat" bind:value={$thing.fat} class="flex-1" on:keypress={handleKeyPress} type="number" />
 						<Dialog.Root bind:open={fatOpen}>
 							<Dialog.Trigger class="mx-2">
 								<CalculatorIcon />

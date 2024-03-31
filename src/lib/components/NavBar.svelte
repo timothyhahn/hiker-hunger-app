@@ -120,4 +120,8 @@
 			{/each}
 		</RadioGroup.Root>
 	</Label>
+
+	<div class="my-3">
+		Made with 🤪 by <a href="https://github.com/timothyhahn/hiker-hunger-app" class="hover:underline">Jeeves</a>
+	</div>
 </div>

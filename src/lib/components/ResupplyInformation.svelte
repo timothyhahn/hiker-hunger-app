@@ -44,6 +44,9 @@
 			case PrimaryStat.proteinPerDay:
 				if (resupply.daysToNextResupply === null) return 'Unknown number of days to next resupply';
 				return `${resupply.things.reduce((acc, thing) => acc + (thing.protein || 0) * thing.quantity, 0) / resupply.daysToNextResupply} mg/day`;
+			case PrimaryStat.carbsPerDay:
+				if (resupply.daysToNextResupply === null) return 'Unknown number of days to next resupply';
+				return `${resupply.things.reduce((acc, thing) => acc + (thing.carbohydrates || 0) * thing.quantity, 0) / resupply.daysToNextResupply} mg/day`;
 			case PrimaryStat.fatPerDay:
 				if (resupply.daysToNextResupply === null) return 'Unknown number of days to next resupply';
 				return `${resupply.things.reduce((acc, thing) => acc + (thing.fat || 0) * thing.quantity, 0) / resupply.daysToNextResupply} mg/day`;
