@@ -175,26 +175,26 @@
 			<button class="btn orange operator" on:click={() => submitOperation({ type: 'divide' })}>
 				<Divide />
 			</button>
-			<button class="btn" on:click={() => submitNumber(7)}>7</button>
-			<button class="btn" on:click={() => submitNumber(8)}>8</button>
-			<button class="btn" on:click={() => submitNumber(9)}>9</button>
+			<button class="btn dark:bg-gray-700" on:click={() => submitNumber(7)}>7</button>
+			<button class="btn dark:bg-gray-700" on:click={() => submitNumber(8)}>8</button>
+			<button class="btn dark:bg-gray-700" on:click={() => submitNumber(9)}>9</button>
 			<button class="btn orange operator" on:click={() => submitOperation({ type: 'multiply' })}>
 				<X />
 			</button>
-			<button class="btn" on:click={() => submitNumber(4)}>4</button>
-			<button class="btn" on:click={() => submitNumber(5)}>5</button>
-			<button class="btn" on:click={() => submitNumber(6)}>6</button>
-			<button class="btn orange" on:click={() => submitOperation({ type: 'subtract' })}>
+			<button class="btn dark:bg-gray-700" on:click={() => submitNumber(4)}>4</button>
+			<button class="btn dark:bg-gray-700" on:click={() => submitNumber(5)}>5</button>
+			<button class="btn dark:bg-gray-700" on:click={() => submitNumber(6)}>6</button>
+			<button class="btn orange operator" on:click={() => submitOperation({ type: 'subtract' })}>
 				<Minus />
 			</button>
-			<button class="btn" on:click={() => submitNumber(1)}>1</button>
-			<button class="btn" on:click={() => submitNumber(2)}>2</button>
-			<button class="btn" on:click={() => submitNumber(3)}>3</button>
+			<button class="btn dark:bg-gray-700" on:click={() => submitNumber(1)}>1</button>
+			<button class="btn dark:bg-gray-700" on:click={() => submitNumber(2)}>2</button>
+			<button class="btn dark:bg-gray-700" on:click={() => submitNumber(3)}>3</button>
 			<button class="btn orange operator" on:click={() => submitOperation({ type: 'add' })}>
 				<Plus />
 			</button>
-			<button class="btn span-2" on:click={() => submitNumber(0)}>0</button>
-			<button class="btn" on:click={submitPeriod}>.</button>
+			<button class="btn span-2 dark:bg-gray-700" on:click={() => submitNumber(0)}>0</button>
+			<button class="btn dark:bg-gray-700" on:click={submitPeriod}>.</button>
 			<button class="btn orange operator" on:click={submitEquals}>
 				<Equal />
 			</button>
@@ -228,5 +228,11 @@
 
 	.span-2 {
 		grid-column: span 2;
+	}
+
+	.operator {
+      justify-content: center;
+      display: flex;
+      align-items: center;
 	}
 </style>

@@ -1,3 +1,5 @@
+import { PrimaryStat } from '$lib/resupply';
+
 export enum DistanceUnit {
 	mi = 'Miles',
 	km = 'Kilometers'
@@ -24,4 +26,11 @@ export enum Trackable {
 export interface DisplaySettings {
 	distanceUnit: DistanceUnit;
 	energyUnit: EnergyUnit;
+	primaryStat: PrimaryStat;
 }
+
+export const DEFAULT_DISPLAY_SETTINGS: DisplaySettings = {
+	distanceUnit: DistanceUnit.mi,
+	energyUnit: EnergyUnit.kcal,
+	primaryStat: PrimaryStat.totalCalories
+};

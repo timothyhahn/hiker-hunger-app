@@ -2,168 +2,183 @@
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import * as Card from '$lib/components/ui/card';
 	import * as Collapsible from '$lib/components/ui/collapsible';
-	import { Separator } from '$lib/components/ui/select';
 
 	import { Button } from '$lib/components/ui/button';
-	import { ChevronsDownUp, ChevronsUpDown } from 'lucide-svelte';
-	import { createEventDispatcher } from 'svelte';
+	import { ChevronDown, ChevronUp, SquareX } from 'lucide-svelte';
+	import { type Writable } from 'svelte/store';
+	import { PrimaryStat, type Resupply } from '$lib/resupply';
 	import { type DisplaySettings, Trackable } from '$lib/settings';
-	import type { Resupply } from '$lib/resupply';
-	import { getTrackableLabel } from '$lib/utils';
-	import { Label } from '$lib/components/ui/label';
-	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
-	import { Input } from '$lib/components/ui/input';
+	import { Separator } from '$lib/components/ui/separator';
+	import { onMount } from 'svelte';
 
-	export let resupply: Resupply;
+	export let resupply: Writable<Resupply>;
 	export let displaySettings: DisplaySettings;
-	let expanded = false;
-
-	const dispatch = createEventDispatcher<{
-		clearAll: null;
-		toggleTracked: { trackable: Trackable };
-		updateDaysToNext: number;
-		updateDistanceToNext: number;
-	}>();
 
 	function clearAll() {
-		dispatch('clearAll');
+		resupply.update((resupply) => {
+			resupply.things = [];
+			return resupply;
+		});
 	}
 
-	function toggleTracked(trackable: Trackable) {
-		dispatch('toggleTracked', { trackable });
+	let expanded = false;
+
+	$: primaryStat = displaySettings.primaryStat;
+
+	function getPrimaryStatValue(resupply: Resupply, primaryStat: PrimaryStat) {
+		switch (primaryStat) {
+			case PrimaryStat.numItems:
+				return `${resupply.things.length} items`;
+			case PrimaryStat.totalCalories:
+				return `${resupply.things.reduce((acc, thing) => acc + (thing.energy || 0) * thing.quantity, 0)} ${displaySettings.energyUnit}`;
+			case PrimaryStat.totalProtein:
+				return `${resupply.things.reduce((acc, thing) => acc + (thing.protein || 0) * thing.quantity, 0)} mg`;
+			case PrimaryStat.totalFat:
+				return `${resupply.things.reduce((acc, thing) => acc + (thing.fat || 0) * thing.quantity, 0)} mg`;
+			case PrimaryStat.totalCarbs:
+				return `${resupply.things.reduce((acc, thing) => acc + (thing.carbohydrates || 0) * thing.quantity, 0)} mg`;
+			case PrimaryStat.caloriesPerDay:
+				if (resupply.daysToNextResupply === null) return 'Unknown number of days to next resupply';
+				return `${resupply.things.reduce((acc, thing) => acc + (thing.energy || 0) * thing.quantity, 0) / resupply.daysToNextResupply} ${displaySettings.energyUnit}/day`;
+			case PrimaryStat.proteinPerDay:
+				if (resupply.daysToNextResupply === null) return 'Unknown number of days to next resupply';
+				return `${resupply.things.reduce((acc, thing) => acc + (thing.protein || 0) * thing.quantity, 0) / resupply.daysToNextResupply} mg/day`;
+			case PrimaryStat.fatPerDay:
+				if (resupply.daysToNextResupply === null) return 'Unknown number of days to next resupply';
+				return `${resupply.things.reduce((acc, thing) => acc + (thing.fat || 0) * thing.quantity, 0) / resupply.daysToNextResupply} mg/day`;
+			case PrimaryStat.caloriesPerMile:
+				if (resupply.distanceToNextResupply === null) return 'Unknown distance to next resupply';
+				return `${resupply.things.reduce((acc, thing) => acc + (thing.energy || 0) * thing.quantity, 0) / resupply.distanceToNextResupply} ${displaySettings.energyUnit}/${displaySettings.distanceUnit}`;
+			case PrimaryStat.proteinPerMile:
+				if (resupply.distanceToNextResupply === null) return 'Unknown distance to next resupply';
+				return `${resupply.things.reduce((acc, thing) => acc + (thing.protein || 0) * thing.quantity, 0) / resupply.distanceToNextResupply} mg/${displaySettings.distanceUnit}`;
+			case PrimaryStat.carbsPerMile:
+				if (resupply.distanceToNextResupply === null) return 'Unknown distance to next resupply';
+				return `${resupply.things.reduce((acc, thing) => acc + (thing.carbohydrates || 0) * thing.quantity, 0) / resupply.distanceToNextResupply} mg/${displaySettings.distanceUnit}`;
+			case PrimaryStat.fatPerMile:
+				if (resupply.distanceToNextResupply === null) return 'Unknown distance to next resupply';
+				return `${resupply.things.reduce((acc, thing) => acc + (thing.fat || 0) * thing.quantity, 0) / resupply.distanceToNextResupply} mg/${displaySettings.distanceUnit}`;
+		}
 	}
 
-	function updateDaysToNext(days: number) {
-		dispatch('updateDaysToNext', parseInt(days, 10));
-	}
-
-	function updateDistanceToNext(distance: number) {
-		dispatch('updateDistanceToNext', parseInt(distance, 10));
+	function removeThing(idx: number) {
+		resupply.update((resupply) => {
+			resupply.things.splice(idx, 1);
+			return resupply;
+		});
 	}
 </script>
 
-<Card.Root class="fixed bottom-0 w-full rounded-b-none">
+<Card.Root class="fixed bottom-0 w-full rounded-b-none p-1">
 	<Collapsible.Root bind:open={expanded}>
-		<Card.Header>
+		<Card.Header class="p-1">
 			<Card.Title>
-				<div class="flex justify-between">
-					<div class="flex-1">Summary</div>
-					<div class="flex flex-row">
-						<Collapsible.Trigger>
-							<Button variant="outline" class="mr-4">
+				<Collapsible.Trigger class="w-full text-left">
+					<div class="flex justify-between">
+						<div class="flex-1 my-auto">
+							{getPrimaryStatValue($resupply, primaryStat)}
+						</div>
+						<div class="flex flex-row">
+							<Button variant="ghost" class="mr-4">
 								{#if expanded}
-									<ChevronsDownUp />
+									<ChevronDown />
 								{:else}
-									<ChevronsUpDown />
+									<ChevronUp />
 								{/if}
 							</Button>
-						</Collapsible.Trigger>
 
-						<AlertDialog.Root>
-							<AlertDialog.Trigger>
-								<Button variant="secondary">Clear</Button>
-							</AlertDialog.Trigger>
-							<AlertDialog.Content>
-								<AlertDialog.Header>
-									<AlertDialog.Title>Are you sure?</AlertDialog.Title>
-								</AlertDialog.Header>
-								<AlertDialog.Footer>
-									<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-									<AlertDialog.Action on:click={clearAll}>Continue</AlertDialog.Action>
-								</AlertDialog.Footer>
-							</AlertDialog.Content>
-						</AlertDialog.Root>
+							<AlertDialog.Root>
+								<AlertDialog.Trigger>
+									<Button variant="secondary">Clear</Button>
+								</AlertDialog.Trigger>
+								<AlertDialog.Content>
+									<AlertDialog.Header>
+										<AlertDialog.Title>
+											Are you sure?
+											<div>
+												This will completely reset the resupply.
+											</div>
+										</AlertDialog.Title>
+									</AlertDialog.Header>
+									<AlertDialog.Footer>
+										<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+										<AlertDialog.Action on:click={clearAll}>Continue</AlertDialog.Action>
+									</AlertDialog.Footer>
+								</AlertDialog.Content>
+							</AlertDialog.Root>
+						</div>
 					</div>
-				</div>
+				</Collapsible.Trigger>
 			</Card.Title>
 		</Card.Header>
-
-		<Card.Content>
-			{#each resupply.tracked.keys() as trackable}
+		<Collapsible.Content class="p-3">
+			<div class="h-[75vh] overflow-y-scroll">
 				<div>
-					<span class="font-extrabold"
-						>Total {trackable.toLowerCase()}
-						:</span
-					>
-					{resupply.totals[trackable].toLocaleString()}
-					{trackable === Trackable.energy ? getTrackableLabel(displaySettings, trackable) : 'mg'}
+					{#each Object.keys(PrimaryStat) as stat}
+						<!-- The single letters off are for case insensitivity, lol -->
+						{#if stat.includes('alories') && $resupply[Trackable.energy]}
+							<div>
+								<div class="font-bold">{PrimaryStat[stat]}:</div>
+								{getPrimaryStatValue($resupply, PrimaryStat[stat])}
+							</div>
+						{:else if stat.includes('rotein') && $resupply[Trackable.protein]}
+							<div>
+								<div class="font-bold">{PrimaryStat[stat]}:</div>
+								{getPrimaryStatValue($resupply, PrimaryStat[stat])}
+							</div>
+						{:else if (stat.includes('fat') || stat.includes('Fat')) && $resupply[Trackable.fat]}
+							<div>
+								<div class="font-bold">{PrimaryStat[stat]}:</div>
+								{getPrimaryStatValue($resupply, PrimaryStat[stat])}
+							</div>
+						{:else if stat.includes('carbs') && $resupply[Trackable.carbohydrates] }
+							<div>
+								<div class="font-bold">{PrimaryStat[stat]}:</div>
+								{getPrimaryStatValue($resupply, PrimaryStat[stat])}
+							</div>
+						{:else if stat.includes('numItems')}
+							<div>
+								<div class="font-bold">{PrimaryStat[stat]}:</div>
+								{getPrimaryStatValue($resupply, PrimaryStat[stat])}
+							</div>
+						{/if}
+					{/each}
 				</div>
-			{/each}
-			{#if resupply.daysToNextResupply}
-				<Separator />
-				{#each resupply.tracked.keys() as trackable}
-					<div>
-						<span class="font-extrabold"
-							>Daily {trackable.toLowerCase()}
-							:</span
-						>
-						{Math.floor(resupply.totals[trackable] / resupply.daysToNextResupply).toLocaleString()}
-						{trackable === Trackable.energy ? getTrackableLabel(displaySettings, trackable) : 'mg'}
-					</div>
+				<Separator class="my-3" />
+				<div class="font-bold">Items:</div>
+				{#each $resupply.things as thing, idx}
+					<Card.Root class="p-3">
+						<Card.Title>
+							<div class="flex justufy-between">
+								<div class="flex-1">
+									{thing.name} x {thing.quantity}
+								</div>
+
+								<div class="">
+									<Button variant="ghost" class="mx-auto" on:click={() => removeThing(idx)}>
+										<SquareX />
+									</Button>
+								</div>
+							</div>
+						</Card.Title>
+						<Card.Content>
+							<div class="flex flex-col">
+								{#each Object.keys(Trackable) as trackable}
+									{#if $resupply[Trackable[trackable]] == true}
+										<div>
+											<span class="font-bold">{Trackable[trackable]}:</span>
+											{(thing[trackable] || 0) * thing.quantity}
+										</div>
+									{/if}
+								{/each}
+							</div>
+						</Card.Content>
+						<Card.Footer class="w-full">
+						</Card.Footer>
+					</Card.Root>
 				{/each}
-			{/if}
-			{#if resupply.distanceToNextResupply}
-				<Separator />
-				{#each resupply.tracked.keys() as trackable}
-					<div>
-						<span class="font-extrabold"
-							>Per {displaySettings.distanceUnit.toString().toLowerCase().slice(0, -1)}
-							{trackable.toLowerCase()}
-							:</span
-						>
-						{Math.floor(
-							resupply.totals[trackable] / resupply.distanceToNextResupply
-						).toLocaleString()}
-						{trackable === Trackable.energy ? getTrackableLabel(displaySettings, trackable) : 'mg'}
-					</div>
-				{/each}
-			{/if}
-		</Card.Content>
-		<Collapsible.Content class="p-6">
-			<ScrollArea class="h-[250px]">
-				<Separator />
-				<h1 class="font-bold">What to track?</h1>
-				{#each Object.values(Trackable) as trackable}
-					<div>
-						<Checkbox
-							id="terms"
-							checked={resupply.tracked.has(trackable)}
-							aria-labelledby="terms-label"
-							on:click={() => toggleTracked(trackable)}
-						/>
-						<Label
-							id="terms-label"
-							for="terms"
-							class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-						>
-							{trackable}
-						</Label>
-					</div>
-				{/each}
-				<Separator />
-				<h1 class="font-bold">Info about resupply</h1>
-				<div class="mx-3">
-					<Label for="daysToNext">Days until next resupply</Label>
-					<Input
-						id="daysToNext"
-						type="number"
-						value={resupply.daysToNextResupply}
-						on:input={(v) => updateDaysToNext(v.target.valueAsNumber)}
-					/>
-				</div>
-				<div class="mx-3">
-					<Label for="distanceToNext">
-						{displaySettings.distanceUnit} to next resupply
-					</Label>
-					<Input
-						id="distanceToNext"
-						type="number"
-						value={resupply.distanceToNextResupply}
-						on:input={(v) => updateDistanceToNext(v.target.valueAsNumber)}
-					/>
-				</div>
-			</ScrollArea>
+			</div>
 		</Collapsible.Content>
 	</Collapsible.Root>
 </Card.Root>
