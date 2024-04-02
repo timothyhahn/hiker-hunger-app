@@ -9,6 +9,8 @@
 
 	// eslint-disable-next-line svelte/valid-compile
 	export let parent: SvelteComponent;
+	export let isNewUser: boolean;
+	let isOpen: boolean = isNewUser;
 	const modalStore = getModalStore();
 	const resupply = resupplyStore;
 	const displaySettings = displaySettingsStore;
@@ -16,6 +18,23 @@
 
 {#if $modalStore[0]}
 	<div class="modal-example-form card p-4 w-modal shadow-xl space-y-4">
+		{#if isNewUser && isOpen}
+			<aside class="alert bg-gradient-to-br variant-gradient-primary-secondary">
+				<div class="alert-message">
+					<div class="flex justify-between">
+						<h3 class="h3">Welcome to Hiker Hunger!</h3>
+						<button class="btn btn-sm" on:click={() => isOpen = false}>
+							<X />
+						</button>
+					</div>
+					<p>Feel free to tell me a little bit about your resupply.</p>
+					<p>All of these fields are optional.</p>
+					<p>If you need to come back here to change things later, click on the Settings > Resupply menu.</p>
+					<p>Check out the File > About menu for more information on how to use this.</p>
+					<p>Or, if you're in a hurry, just add some items to your resupply and watch how various stats change.</p>
+				</div>
+			</aside>
+		{/if}
 		<div class="flex justify-between">
 			<header class="text-2xl font-bold">Resupply Settings</header>
 			<button class="btn btn-sm" on:click={() => modalStore.close()}>
@@ -49,12 +68,12 @@
 		<h1 class="font-bold">What to keep track of</h1>
 		{#each iterableTrackables as trackable}
 			<div class="flex">
-			<input
-				id="{trackable}"
-				class="checkbox mr-3"
-				type="checkbox"
-				bind:checked={$resupply[trackable]}
-			/>
+				<input
+					id="{trackable}"
+					class="checkbox mr-3"
+					type="checkbox"
+					bind:checked={$resupply[trackable]}
+				/>
 				<label for="{trackable}">{trackable}</label>
 			</div>
 		{/each}

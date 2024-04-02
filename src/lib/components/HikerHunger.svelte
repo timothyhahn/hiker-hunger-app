@@ -7,6 +7,7 @@
 	import { displaySettingsStore, resupplyStore } from '$lib/stores';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { Modals } from '$lib/modals';
+	import ResupplySettingsModal from '$lib/components/modals/ResupplySettingsModal.svelte';
 
 	const VERSION_KEY = '3';
 	const DISPLAY_SETTINGS_KEY = `displaySettings-${VERSION_KEY}`;
@@ -43,7 +44,7 @@
 	});
 
 	$: if (isNewUser) {
-		modalStore.trigger({type: 'component', component: Modals.resupplySettings});
+		modalStore.trigger({type: 'component', component: {ref: ResupplySettingsModal, props: {isNewUser}}, meta: {isNewUser}});
 	}
 </script>
 
