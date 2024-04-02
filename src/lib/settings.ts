@@ -14,13 +14,6 @@ export enum EnergyUnit {
 
 export const EnergyUnitIterable = Object.values(EnergyUnit);
 
-export enum Trackable {
-	energy = 'Energy',
-	carbohydrates = 'Carbohydrates',
-	protein = 'Protein',
-	fat = 'Fat'
-}
-
 // Settings at the "global" level, dealing with how units will be displayed.
 // Doesn't actually effect usage, just display.
 export interface DisplaySettings {
@@ -32,5 +25,5 @@ export interface DisplaySettings {
 export const DEFAULT_DISPLAY_SETTINGS: DisplaySettings = {
 	distanceUnit: DistanceUnit.mi,
 	energyUnit: EnergyUnit.kcal,
-	primaryStat: PrimaryStat.totalCalories
+	primaryStat: PrimaryStat.totalEnergy
 };

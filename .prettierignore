@@ -5,3 +5,6 @@ yarn.lock
 
 ios/
 android/
+
+# These come from shadcn.
+src/lib/components/ui

@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "vite dev --host 0.0.0.0",
 		"build": "vite build",
 		"preview": "vite preview",
 		"test": "npm run test:integration && npm run test:unit",
@@ -16,10 +16,14 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
+		"@skeletonlabs/skeleton": "^2.9.0",
+		"@skeletonlabs/tw-plugin": "^0.3.1",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"@tailwindcss/forms": "^0.5.7",
 		"@types/eslint": "^8.56.0",
+		"@types/uuid": "^9.0.8",
 		"@typescript-eslint/eslint-plugin": "^7.0.0",
 		"@typescript-eslint/parser": "^7.0.0",
 		"autoprefixer": "^10.4.16",
@@ -45,6 +49,7 @@
 		"@capacitor/cli": "^5.7.4",
 		"@capacitor/core": "^5.7.4",
 		"@capacitor/ios": "^5.7.4",
+		"@floating-ui/dom": "^1.6.3",
 		"@sveltejs/adapter-static": "^3.0.1",
 		"bits-ui": "^0.21.1",
 		"clsx": "^2.1.0",
@@ -56,6 +61,7 @@
 		"svelte-sonner": "^0.3.19",
 		"tailwind-merge": "^2.2.2",
 		"tailwind-variants": "^0.2.1",
+		"uuid": "^9.0.1",
 		"vaul-svelte": "^0.3.0"
 	}
 }

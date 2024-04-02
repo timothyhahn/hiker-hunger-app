@@ -13,3 +13,6 @@ package-lock.json
 yarn.lock
 android/
 ios/
+
+# Ignore shadcn
+src/lib/components/ui/

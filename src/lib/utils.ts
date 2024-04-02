@@ -2,7 +2,8 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
-import { type DisplaySettings, Trackable } from '$lib/settings';
+import { type DisplaySettings } from '$lib/settings';
+import { Trackable } from '$lib/trackable';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
