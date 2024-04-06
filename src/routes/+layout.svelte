@@ -14,6 +14,8 @@
 	import ResupplySettingsModal from '$lib/components/modals/ResupplySettingsModal.svelte';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
+	import SaveModal from '$lib/components/modals/SaveModal.svelte';
+	import LoadModal from '$lib/components/modals/LoadModal.svelte';
 
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 
@@ -22,6 +24,8 @@
 	const modalRegistry: Record<Modals, ModalComponent> = {
 		calculator: { ref: CalculatorModal },
 		new: { ref: NewModal },
+		save: { ref: SaveModal },
+		load: { ref: LoadModal },
 		about: { ref: AboutModal },
 		displaySettings: { ref: DisplaySettingsModal },
 		resupplySettings: { ref: ResupplySettingsModal }

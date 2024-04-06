@@ -50,6 +50,7 @@
 		"@capacitor/core": "^5.7.4",
 		"@capacitor/ios": "^5.7.4",
 		"@floating-ui/dom": "^1.6.3",
+		"@formkit/tempo": "^0.0.19",
 		"@sveltejs/adapter-static": "^3.0.1",
 		"bits-ui": "^0.21.1",
 		"clsx": "^2.1.0",

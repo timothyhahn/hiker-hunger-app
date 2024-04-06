@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export interface Resupply {
 	id: string;
+	created_at: Date;
 	name: string | null,
 	[Trackable.energy]: boolean;
 	[Trackable.carbohydrates]: boolean;
@@ -17,6 +18,7 @@ export interface Resupply {
 export function newResupply(): Resupply{
 	return {
 		id: uuidv4(),
+		created_at: new Date(),
 		name: null,
 		[Trackable.energy]: true,
 		[Trackable.protein]: false,
