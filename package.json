@@ -53,6 +53,7 @@
 		"@formkit/tempo": "^0.0.19",
 		"@sveltejs/adapter-static": "^3.0.1",
 		"bits-ui": "^0.21.1",
+		"chart.js": "^4.4.2",
 		"clsx": "^2.1.0",
 		"lucide": "^0.363.0",
 		"lucide-svelte": "^0.363.0",

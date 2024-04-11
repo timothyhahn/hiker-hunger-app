@@ -8,6 +8,7 @@
 	import ThingsTab from '$lib/components/resupply/ThingsTab.svelte';
 	import { displaySettingsStore, resupplyStore } from '$lib/stores';
 	import { getPrimaryStatValue } from '$lib/trackable';
+	import ChartsTab from '$lib/components/resupply/ChartsTab.svelte';
 
 	let resupply: Writable<Resupply> = resupplyStore;
 	let displaySettings: Readable<DisplaySettings> = displaySettingsStore;
@@ -52,11 +53,16 @@
 						<Tab bind:group={tabSet} name="things" value={1}>
 							<span> Things </span>
 						</Tab>
+						<Tab bind:group={tabSet} name="charts" value={2}>
+							<span> Charts </span>
+						</Tab>
 						<svelte:fragment slot="panel">
 							{#if tabSet === 0}
 								<StatsTab />
-							{:else}
+							{:else if tabSet === 1}
 								<ThingsTab />
+							{:else}
+								<ChartsTab />
 							{/if}
 						</svelte:fragment>
 					</TabGroup>
